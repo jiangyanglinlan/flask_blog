@@ -4,6 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+bootstrap-flask = "*"
+flask-migrate = "*"
+python-dotenv = "*"
+faker = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 
