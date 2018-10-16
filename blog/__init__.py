@@ -8,7 +8,7 @@ from .blueprints.blog import blog_bp
 from .extensions import bootstrap, db, migrate, moment
 from .settings import config
 from .commands import register_commands
-from .models import Admin, Category
+from .models import Admin, Category, Post
 
 def create_app(config_name=None):
     if config_name is None:

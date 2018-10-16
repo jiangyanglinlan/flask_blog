@@ -23,9 +23,7 @@
                 <div class="collapse navbar-collapse" id="navbarColor03">
                     <ul class="navbar-nav mr-auto">
                         {{ render_nav_item('blog.index', '首页') }}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/">关于</a>
-                        </li>
+                        {{ render_nav_item('blog.about', '关于') }}
                     </ul>
                 </div>
             </div>
@@ -62,6 +60,7 @@
     <script type="text/javascript" src="{{ url_for('static',
         filename='js/script.js') }}"></script>
     {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+    {{ moment.locale('zh-cn') }}
 {% endblock js%}
 </body>
 </html>
