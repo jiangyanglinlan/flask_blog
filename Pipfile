@@ -9,6 +9,7 @@ flask-migrate = "*"
 python-dotenv = "*"
 faker = "*"
 flask-sqlalchemy = "*"
+flask-moment = "*"
 
 [dev-packages]
 
