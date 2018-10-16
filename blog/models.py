@@ -24,7 +24,7 @@ class Admin(db.Model):
 
 
 class Category(db.Model):
-    __tablename__ = 'categorys'
+    __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True)
@@ -38,7 +38,7 @@ class Post(db.Model):
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.now)
-    category_id = db.Column(db.Integer, db.ForeignKey('categorys.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     comments = db.relationship('Comment', backref='post', cascade='all, delete-orphan')
 
 
