@@ -10,6 +10,8 @@ python-dotenv = "*"
 faker = "*"
 flask-sqlalchemy = "*"
 flask-moment = "*"
+flask-wtf = "*"
+flask-ckeditor = "*"
 
 [dev-packages]
 
