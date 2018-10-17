@@ -102,7 +102,11 @@ def fake_comments(count=200):
             timestamp=fake.date_time_this_year(),
             reviewed=True,
             replied=Comment.query.get(random.randint(1, Comment.query.count())),
-            post=Post.query.get(random.randint(1, Post.query.count()))
         )
+        replied = comment.replied
+        comment.post = replied.post
+        if comment.timestamp < replied.timestamp:
+            comment.timestamp, replied.timestamp = replied.timestamp, comment.timestamp
+            db.session.add(replied)
         db.session.add(comment)
     db.session.commit()
