@@ -2,7 +2,7 @@
 from flask import render_template, request, current_app
 
 from . import blog_bp
-from ...models import Category, Post
+from ...models import Category, Post, Comment
 
 
 @blog_bp.route('/')
@@ -30,5 +30,11 @@ def show_category(category_id):
 
 
 @blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
-def show_post():
-    return render_template('blog/post.html')
+def show_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['BLOG_COMMENT_PER_PAGE']
+    pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(
+        Comment.timestamp.desc()).paginate(page, per_page)
+    comments = pagination.items
+    return render_template('blog/post.html', post=post, pagination=pagination, comments=comments)
