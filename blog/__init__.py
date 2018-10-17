@@ -5,7 +5,7 @@ from flask import Flask
 from .blueprints.admin import admin_bp
 from .blueprints.auth import auth_bp
 from .blueprints.blog import blog_bp
-from .extensions import bootstrap, db, migrate, moment
+from .extensions import bootstrap, db, migrate, moment, mail
 from .settings import config
 from .commands import register_commands
 from .models import Admin, Category, Post
@@ -29,6 +29,7 @@ def register_extensions(app):
     bootstrap.init_app(app)
     migrate.init_app(app)
     moment.init_app(app)
+    mail.init_app(app)
 
 
 def register_blueprints(app):
