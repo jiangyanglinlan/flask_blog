@@ -51,7 +51,6 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(30))
     email = db.Column(db.String(254))
-    site = db.Column(db.String(255))
     body = db.Column(db.Text)
     from_admin = db.Column(db.Boolean, default=False)  # 是否来自管理者
     reviewed = db.Column(db.Boolean, default=False)  # 是否通过审核
