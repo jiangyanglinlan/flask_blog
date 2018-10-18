@@ -6,8 +6,8 @@ from .extensions import db
 def register_commands(app):
     @app.cli.command()
     @click.option('--category', default=10, help='生成分类, 默认数量为 10.')
-    @click.option('--post', default=50, help='生成文章, 默认数量为 20.')
-    @click.option('--comment', default=100, help='生成评论, 默认数量为 100.')
+    @click.option('--post', default=50, help='生成文章, 默认数量为 50.')
+    @click.option('--comment', default=200, help='生成评论, 默认数量为 200.')
     def forge(category, post, comment):
         from .fakes import fake_admin, fake_categories, fake_posts, fake_comments
 
