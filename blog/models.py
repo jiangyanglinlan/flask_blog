@@ -41,6 +41,9 @@ class Post(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     comments = db.relationship('Comment', backref='post', cascade='all, delete-orphan')
 
+    def reviewed_comments(self):
+        return [comment for comment in self.comments if comment.reviewed is True]
+
 
 class Comment(db.Model):
     __tablename__ = 'comments'
