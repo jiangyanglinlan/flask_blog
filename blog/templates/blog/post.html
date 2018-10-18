@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/form.html' import render_field %}
 
 {% block title %}
     {{ post.title }}
@@ -89,6 +91,9 @@
         {% if comments %}
             {{ render_pagination(pagination, fragment='#comments') }}
         {% endif %}
+        <div id="comment-form">
+            {{ render_form(form, render_kw={class_: 'btn btn-primary'}, action=request.full_path) }}
+        </div>
     </div>
     <div class="col-sm-4 sidebar">
         {% include "blog/_sidebar.html" %}
