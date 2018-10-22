@@ -21,6 +21,7 @@ class BaseConfig:
     BLOG_POST_PER_PAGE = 10
     BLOG_MANAGE_POST_PER_PAGE = 15
     BLOG_COMMENT_PER_PAGE = 10
+    BLOG_THEMES = {'light': '日间模式', 'black': '夜间模式'}
 
 
 class DevelopmentConfig(BaseConfig):
