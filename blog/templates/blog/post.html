@@ -79,7 +79,7 @@
                                 <p class="mb-1">{{ comment.body }}</p>
                                 <div class="float-right">
                                     <a class="btn btn-light btn-sm"
-                                       href="#">回复</a>
+                                       href="{{ url_for('blog.reply_comment', comment_id=comment.id) }}">回复</a>
                                 </div>
                         </li>
                     {% endfor %}
@@ -90,6 +90,12 @@
         </div>
         {% if comments %}
             {{ render_pagination(pagination, fragment='#comments') }}
+        {% endif %}
+        {% if request.args.get('reply') %}
+            <div class="alert alert-dark">
+                回复 <strong>{{ request.args.get('author') }}</strong>
+                <a class="float-right" href="{{ url_for('blog.show_post', post_id=post.id) }}">取消</a>
+            </div>
         {% endif %}
         <div id="comment-form">
             {{ render_form(form, render_kw={class_: 'btn btn-primary'}, action=request.full_path) }}

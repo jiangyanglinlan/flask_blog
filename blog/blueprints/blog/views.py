@@ -5,7 +5,7 @@ from . import blog_bp
 from ...models import Category, Post, Comment
 from ...forms import CommentForm
 from ...extensions import db
-from ...email import send_new_comment_email
+from ...email import send_new_comment_email, send_new_reply_email
 
 
 @blog_bp.route('/')
@@ -66,10 +66,21 @@ def show_post(post_id):
             post=post,
             reviewed=reviewed,
         )
+        replied_id = request.args.get('reply')
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+            send_new_reply_email(replied_comment)
         db.session.add(comment)
         db.session.commit()
         flash('您的评论将在审核通过后显示', 'info')
-        print('start send')
         send_new_comment_email(post) # 发送提醒邮件给博主
         return redirect(url_for('blog.show_post', post_id=post_id))
     return render_template('blog/post.html', post=post, pagination=pagination, comments=comments, form=form)
+
+
+@blog_bp.route('/reply/comment/<int:comment_id>')
+def reply_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    return redirect(url_for('blog.show_post', post_id=comment.post_id, reply=comment_id,
+                            author=comment.author) + '#comment-form')
