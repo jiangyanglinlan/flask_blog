@@ -1,6 +1,7 @@
 import click
 
 from .extensions import db
+from .models import Admin
 
 
 def register_commands(app):
@@ -26,4 +27,23 @@ def register_commands(app):
         click.echo(f'生成 {comment} 条评论...')
         fake_comments(comment)
 
+        click.echo('Done...')
+
+    @app.cli.command()
+    @click.option('--username', prompt=True, help='管理员用户名')
+    @click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True, help='管理员密码')
+    def init(username, password):
+        from .fakes import fake_admin
+        click.echo('创建数据库...')
+        db.create_all()
+
+        admin = Admin.query.first()
+        if admin:
+            click.echo('已经存在管理员, 更新数据库中...')
+            admin.username = username
+            admin.set_password(password)
+            db.session.commit()
+        else:
+            click.echo('创建管理员信息...')
+            fake_admin(username, password)
         click.echo('Done...')

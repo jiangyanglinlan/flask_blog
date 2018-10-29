@@ -10,15 +10,15 @@ from .extensions import db
 fake = Faker('zh_CN')
 
 
-def fake_admin():
+def fake_admin(username, password):
     admin = Admin(
-        username='admin',
+        username=username,
         blog_title='上海堡垒',
         blog_sub_title='铁甲依然在',
         name='江洋',
         about='Python web, 作家江南粉, 商人二框黑'
     )
-    admin.set_password('flaskblog')
+    admin.set_password(password)
     db.session.add(admin)
     db.session.commit()
 
