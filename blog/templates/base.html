@@ -25,6 +25,42 @@
                         {{ render_nav_item('blog.index', '首页') }}
                         {{ render_nav_item('blog.about', '关于') }}
                     </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if current_user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                                    新建 <span class="caret"></span>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#">文章</a>
+                                    <a class="dropdown-item" href="#">分类</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                                    管理<span class="caret"></span>
+                                    {% if unread_comments %}
+                                        <span class="badge badge-success">new</span>
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_post') }}">文章</a>
+                                    <a class="dropdown-item" href="#">分类</a>
+                                    <a class="dropdown-item" href="#">评论
+                                        {% if unread_comments %}
+                                            <span class="badge badge-success">{{ unread_comments }}</span>
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </li>
+                        {{ render_nav_item('admin.settings', 'Settings') }}
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
