@@ -8,7 +8,7 @@
         <h3>文章
             <small class="text-muted">{{ pagination.total }}</small>
             <span class="float-right">
-                <a class="btn btn-primary btn-sm" href="#">新文章</a>
+                <a class="btn btn-primary btn-sm" href="{{ url_for('admin.new_post') }}">新文章</a>
             </span>
         </h3>
     </div>

@@ -1,8 +1,17 @@
-from flask import render_template, request, current_app
+from flask import (
+    render_template,
+    request,
+    current_app,
+    redirect,
+    url_for,
+    flash,
+)
 from flask_login import login_required
 
 from . import admin_bp
-from ...models import Post
+from ...extensions import db
+from ...models import Post, Category
+from ...forms import PostForm
 
 
 @admin_bp.before_request
@@ -25,6 +34,22 @@ def manage_post():
         page, per_page=current_app.config['BLOG_MANAGE_POST_PER_PAGE'])
     posts = pagination.items
     return render_template('admin/manage_post.html', pagination=pagination, posts=posts)
+
+
+@admin_bp.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.body.data
+        category = Category.query.get(form.category.data)
+        post = Post(title=title, body=body, category=category)
+        db.session.add(post)
+        db.session.commit()
+        flash('发表成功.', 'success')
+        return redirect(url_for('blog.show_post', post_id=post.id))
+    return render_template('admin/new_post.html', form=form)
 
 
 @admin_bp.route('/settings')

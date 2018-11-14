@@ -19,8 +19,8 @@ class LoginForm(FlaskForm):
     '''
     登录表单
     '''
-    username = StringField('账号', validators=[DataRequired(), Length(1, 20)])
-    password = PasswordField('密码', validators=[DataRequired(), Length(8, 128)])
+    username = StringField('账号', validators=[DataRequired()])
+    password = PasswordField('密码', validators=[DataRequired()])
     remember = BooleanField('记住我')
     submit = SubmitField('登录')
 
