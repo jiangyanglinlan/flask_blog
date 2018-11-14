@@ -52,6 +52,25 @@ def new_post():
     return render_template('admin/new_post.html', form=form)
 
 
+@admin_bp.route('/post/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    form = PostForm()
+    post = Post.query.get_or_404(post_id)
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.body = form.body.data
+        post.category = Category.query.get(form.category.data)
+        db.session.commit()
+        flash('文章更新成功.', 'success')
+        return redirect(url_for('blog.show_post', post_id=post_id))
+    form.title.data = post.title
+    form.body.data = post.body
+    form.category.data = post.category_id
+    return render_template('admin/edit_post.html', form=form)
+
+
+
 @admin_bp.route('/settings')
 def settings():
     return render_template('admin/settings.html')

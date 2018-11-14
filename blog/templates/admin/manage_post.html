@@ -47,7 +47,7 @@
                             {% if post.can_comment %}允许{% else %}禁止{% endif %}评论
                         </button>
                     </form>
-                    <a class="btn btn-info btn-sm" href="#">编辑</a>
+                    <a class="btn btn-info btn-sm" href="{{ url_for('admin.edit_post', post_id=post.id) }}">编辑</a>
                     <form class="inline" method="post"
                           action="#">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
