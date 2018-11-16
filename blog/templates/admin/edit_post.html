@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/form.html' import render_field %}
 
 {% block title %}编辑文章{% endblock %}
 
@@ -7,7 +7,13 @@
     <div class="page-header">
         <h3>编辑文章</h3>
     </div>
-    {{ render_form(form) }}
+    <form method="post">
+        {{ form.csrf_token() }}
+        {{ render_field(form.title) }}
+        {{ render_field(form.category) }}
+        {{ render_field(form.body) }}
+        {{ render_field(form.submit, class="btn btn-primary") }}
+    </form>
 {% endblock %}
 
 {% block js %}

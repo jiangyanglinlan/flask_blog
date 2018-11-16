@@ -98,7 +98,13 @@
             </div>
         {% endif %}
         <div id="comment-form">
-            {{ render_form(form, render_kw={class_: 'btn btn-primary'}, action=request.full_path) }}
+            <form method="post">
+                {{ form.csrf_token() }}
+                {{ render_field(form.author) }}
+                {{ render_field(form.email) }}
+                {{ render_field(form.body) }}
+                {{ render_field(form.submit, class="btn btn-primary") }}
+            </form>
         </div>
     </div>
     <div class="col-sm-4 sidebar">

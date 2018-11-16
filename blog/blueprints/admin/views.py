@@ -12,6 +12,7 @@ from . import admin_bp
 from ...extensions import db
 from ...models import Post, Category
 from ...forms import PostForm
+from ...utils import redirect_back
 
 
 @admin_bp.before_request
@@ -69,6 +70,15 @@ def edit_post(post_id):
     form.category.data = post.category_id
     return render_template('admin/edit_post.html', form=form)
 
+
+@admin_bp.route('/post/delete/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('删除成功', 'success')
+    return redirect_back()
 
 
 @admin_bp.route('/settings')

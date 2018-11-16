@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/form.html' import render_field %}
 
 {% block title %}登录{% endblock %}
 
@@ -10,7 +10,13 @@
             <h3>登录</h3>
         </div>
         <div class="row h-100 justify-content-center align-items-center">
-            {{ render_form(form, extra_classes='col-6') }}
+            <form class="col-6" method="post">
+                {{ form.csrf_token() }}
+                {{ render_field(form.username) }}
+                {{ render_field(form.password) }}
+                {{ render_field(form.remember) }}
+                {{ render_field(form.submit, class="btn btn-primary") }}
+            </form>
         </div>
     </div>
 {% endblock %}

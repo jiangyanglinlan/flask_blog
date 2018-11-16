@@ -49,7 +49,7 @@
                     </form>
                     <a class="btn btn-info btn-sm" href="{{ url_for('admin.edit_post', post_id=post.id) }}">编辑</a>
                     <form class="inline" method="post"
-                          action="#">
+                          action="{{ url_for('admin.delete_post', post_id=post.id, next=request.full_path)}}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('确定删除吗?');">删除
                         </button>
