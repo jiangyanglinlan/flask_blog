@@ -24,9 +24,9 @@ def login_protect():
     pass
 
 
-@admin_bp.route('/post/manage')
+@admin_bp.route('/posts/manage')
 @login_required
-def manage_post():
+def manage_posts():
     '''
     管理文章视图 
     '''
@@ -34,7 +34,7 @@ def manage_post():
     pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['BLOG_MANAGE_POST_PER_PAGE'])
     posts = pagination.items
-    return render_template('admin/manage_post.html', pagination=pagination, posts=posts)
+    return render_template('admin/manage_posts.html', pagination=pagination, posts=posts)
 
 
 @admin_bp.route('/post/new', methods=['GET', 'POST'])
@@ -79,6 +79,25 @@ def delete_post(post_id):
     db.session.commit()
     flash('删除文章成功', 'success')
     return redirect_back()
+
+
+@admin_bp.route('/comments/manage')
+def manage_comments():
+    filter_rule = request.args.get('filter', 'all')  # 从查询字符串获取过滤规则
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['BLOG_MANAGE_COMMENT_PER_PAGE']
+    if filter_rule == 'unread':
+        filtered_comments = Comment.query.filter_by(reviewed=False)
+    elif filter_rule == 'admin':
+        filtered_comments = Comment.query.filter_by(from_admin=True)
+    else:
+        filtered_comments = Comment.query
+
+    pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(
+        page, per_page=per_page)
+    comments = pagination.items
+    return render_template('admin/manage_comments.html', comments=comments,
+                           pagination=pagination)
 
 
 @admin_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
