@@ -10,7 +10,7 @@ from flask_login import login_required
 
 from . import admin_bp
 from ...extensions import db
-from ...models import Post, Category
+from ...models import Post, Category, Comment
 from ...forms import PostForm
 from ...utils import redirect_back
 
@@ -71,14 +71,38 @@ def edit_post(post_id):
     return render_template('admin/edit_post.html', form=form)
 
 
-@admin_bp.route('/post/delete/<int:post_id>', methods=['GET', 'POST'])
+@admin_bp.route('/post/delete/<int:post_id>', methods=['POST'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
     db.session.commit()
-    flash('删除成功', 'success')
+    flash('删除文章成功', 'success')
     return redirect_back()
+
+
+@admin_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('删除评论成功', 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/set-comment/<int:post_id>', methods=['POST'])
+@login_required
+def set_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.can_comment:
+        post.can_comment = False
+        flash('当前文章设置为禁止评论', 'info')
+    else:
+        post.can_comment = True
+        flash('当前文章设置为允许评论.', 'info')
+    db.session.commit()
+    return redirect(url_for('blog.show_post', post_id=post_id))
 
 
 @admin_bp.route('/settings')
