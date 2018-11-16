@@ -1,5 +1,6 @@
 
 from flask import render_template, request, current_app, flash, redirect, url_for, abort, make_response
+from flask_login import current_user
 
 from . import blog_bp
 from ...models import Category, Post, Comment
@@ -47,8 +48,12 @@ def show_post(post_id):
     post = Post.query.get_or_404(post_id)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLOG_COMMENT_PER_PAGE']
-    pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(
-        Comment.timestamp.desc()).paginate(page, per_page)
+    if current_user.is_authenticated:
+        pagination = Comment.query.with_parent(post).order_by(
+            Comment.timestamp.desc()).paginate(page, per_page)
+    else:
+        pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(
+            Comment.timestamp.desc()).paginate(page, per_page)
     comments = pagination.items
 
     form = CommentForm()

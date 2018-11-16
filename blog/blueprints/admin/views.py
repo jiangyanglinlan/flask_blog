@@ -105,6 +105,15 @@ def set_comment(post_id):
     return redirect(url_for('blog.show_post', post_id=post_id))
 
 
+@admin_bp.route('/approve_comment/<int:comment_id>', methods=['POST'])
+def approve_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.reviewed = True
+    db.session.commit()
+    flash('评论审核通过.', 'success')
+    return redirect_back()
+
+
 @admin_bp.route('/settings')
 def settings():
     return render_template('admin/settings.html')
