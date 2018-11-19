@@ -8,10 +8,17 @@ from flask import (
 )
 from flask_login import login_required
 
+from ...models import (
+    Post,
+    Category,
+    Comment,
+)
+from ...forms import (
+    PostForm,
+    CategoryForm,
+)
 from . import admin_bp
 from ...extensions import db
-from ...models import Post, Category, Comment
-from ...forms import PostForm
 from ...utils import redirect_back
 
 
@@ -25,7 +32,6 @@ def login_protect():
 
 
 @admin_bp.route('/posts/manage')
-@login_required
 def manage_posts():
     '''
     管理文章视图 
@@ -38,7 +44,6 @@ def manage_posts():
 
 
 @admin_bp.route('/post/new', methods=['GET', 'POST'])
-@login_required
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -54,7 +59,6 @@ def new_post():
 
 
 @admin_bp.route('/post/edit/<int:post_id>', methods=['GET', 'POST'])
-@login_required
 def edit_post(post_id):
     form = PostForm()
     post = Post.query.get_or_404(post_id)
@@ -72,7 +76,6 @@ def edit_post(post_id):
 
 
 @admin_bp.route('/post/delete/<int:post_id>', methods=['POST'])
-@login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
@@ -101,7 +104,6 @@ def manage_comments():
 
 
 @admin_bp.route('/comment/delete/<int:comment_id>', methods=['POST'])
-@login_required
 def delete_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     db.session.delete(comment)
@@ -111,7 +113,6 @@ def delete_comment(comment_id):
 
 
 @admin_bp.route('/set-comment/<int:post_id>', methods=['POST'])
-@login_required
 def set_comment(post_id):
     post = Post.query.get_or_404(post_id)
     if post.can_comment:
@@ -119,7 +120,7 @@ def set_comment(post_id):
         flash('当前文章设置为禁止评论', 'info')
     else:
         post.can_comment = True
-        flash('当前文章设置为允许评论.', 'info')
+        flash('当前文章设置为允许评论', 'info')
     db.session.commit()
     return redirect(url_for('blog.show_post', post_id=post_id))
 
@@ -129,7 +130,49 @@ def approve_comment(comment_id):
     comment = Comment.query.get_or_404(comment_id)
     comment.reviewed = True
     db.session.commit()
-    flash('评论审核通过.', 'success')
+    flash('评论审核通过', 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/categories/manage')
+def manage_categories():
+    return render_template('admin/manage_categories.html')
+
+
+@admin_bp.route('/category/new', methods=['GET', 'POST'])
+def new_category():
+    form = CategoryForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        category = Category(name=name)
+        db.session.add(category)
+        db.session.commit()
+        flash('分类创建成功', 'success')
+        return redirect_back()
+    return render_template('admin/new_category.html', form=form)
+
+
+@admin_bp.route('/category/edit/<int:category_id>', methods=['GET', 'POST'])
+def edit_category(category_id):
+    form = CategoryForm()
+    category = Category.query.get_or_404(category_id)
+    if form.validate_on_submit():
+        category.name = form.name.data
+        db.session.commit()
+        flash('分类修改成功', 'success')
+        return redirect_back()
+    form.name.data = category.name
+    return render_template('admin/edit_category.html', form=form)
+
+
+@admin_bp.route('/category/delete/<int:category_id>', methods=['POST'])
+def delete_category(category_id):
+    category = Category.query.get_or_404(category_id)
+    if category.id == 1:
+        flash('不能删除默认分类', 'warning')
+        return redirect_back()
+    category.delete()
+    flash('删除成功', 'success')
     return redirect_back()
 
 

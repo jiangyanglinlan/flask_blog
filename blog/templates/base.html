@@ -36,7 +36,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ url_for('admin.new_post') }}">文章</a>
-                                    <a class="dropdown-item" href="#">分类</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.new_category') }}">分类</a>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
@@ -54,7 +54,7 @@
                                         {% if unread_comments %}
                                             <span class="badge badge-success">{{ unread_comments }}</span>
                                         {% endif %}</a>
-                                    <a class="dropdown-item" href="#">分类</a>
+                                    <a class="dropdown-item" href="{{ url_for('admin.manage_categories') }}">分类</a>
                                 </div>
                             </li>
                         {{ render_nav_item('admin.settings', 'Settings') }}
