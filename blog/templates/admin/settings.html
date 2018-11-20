@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/form.html' import render_field %}
 
 {% block title %}配置{% endblock %}
 
@@ -7,10 +7,17 @@
     <div class="page-header">
         <h3>配置</h3>
     </div>
-    {{ render_form(form) }}
+    <form method="post">
+        {{ form.csrf_token() }}
+        {{ render_field(form.name) }}
+        {{ render_field(form.blog_title) }}
+        {{ render_field(form.blog_sub_title) }}
+        {{ render_field(form.about) }}
+        {{ render_field(form.submit, class='btn btn-primary') }}
+    </form>
 {% endblock %}
 
-{% block scripts %}
+{% block js %}
     {{ super() }}
     <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}">
     </script>

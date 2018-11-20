@@ -6,7 +6,7 @@ from flask import (
     url_for,
     flash,
 )
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from ...models import (
     Post,
@@ -16,6 +16,7 @@ from ...models import (
 from ...forms import (
     PostForm,
     CategoryForm,
+    SettingForm,
 )
 from . import admin_bp
 from ...extensions import db
@@ -176,6 +177,20 @@ def delete_category(category_id):
     return redirect_back()
 
 
-@admin_bp.route('/settings')
+@admin_bp.route('/settings', methods=['GET', 'POST'])
 def settings():
-    return render_template('admin/settings.html')
+    form = SettingForm()
+    if form.validate_on_submit():
+        print('yes')
+        current_user.name = form.name.data
+        current_user.blog_title = form.blog_title.data
+        current_user.blog_sub_title = form.blog_sub_title.data
+        current_user.about = form.about.data
+        db.session.commit()
+        flash('博客信息更新成功', 'success')
+        return redirect(url_for('blog.index'))
+    form.name.data = current_user.name
+    form.blog_title.data = current_user.blog_title
+    form.blog_sub_title.data = current_user.blog_sub_title
+    form.about.data = current_user.about
+    return render_template('admin/settings.html', form=form)
